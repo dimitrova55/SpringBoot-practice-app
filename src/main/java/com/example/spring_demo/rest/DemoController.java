@@ -39,6 +39,6 @@ public class DemoController {
 
     @GetMapping("/check")
     public String check(){
-        return "Comparing beans: choach == anotherCoach? " + (coach == anotherCoach);
+        return "Comparing beans: coach == anotherCoach? " + (coach == anotherCoach);
     }
 }
