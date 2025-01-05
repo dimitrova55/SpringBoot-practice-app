@@ -2,9 +2,10 @@ package com.example.spring_demo.rest;
 
 import com.example.spring_demo.entity.StudentRecord;
 import jakarta.annotation.PostConstruct;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +38,9 @@ public class StudentRestController {
         return theStudents.get(studentId);
     }
 
+    /*
+    * Move to StudentExceptionHandler.java
+
     @ExceptionHandler
     public ResponseEntity<StudentErrorResponse> handleException(RuntimeException exc){
         StudentErrorResponse error = new StudentErrorResponse();
@@ -59,4 +63,6 @@ public class StudentRestController {
 
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
+
+     */
 }
