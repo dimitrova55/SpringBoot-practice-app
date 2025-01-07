@@ -1,68 +1,64 @@
 package com.example.spring_demo.rest;
 
-import com.example.spring_demo.entity.StudentRecord;
-import jakarta.annotation.PostConstruct;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.spring_demo.entity.Student;
+import com.example.spring_demo.service.StudentService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
 public class StudentRestController {
 
-    private List<StudentRecord> theStudents;
 
-    @PostConstruct
-    public void loadData(){
-        theStudents = new ArrayList<>();
-        theStudents.add(new StudentRecord("Porrima", "Patel"));
-        theStudents.add(new StudentRecord("Mario", "Rossi"));
-        theStudents.add(new StudentRecord("Mary", "Smith"));
+//    private StudentDAO studentDAO;  // use StudentService instead
+    private StudentService studentService;
+
+    @Autowired
+    public StudentRestController(StudentService studentService) {
+        this.studentService = studentService;
     }
 
     @GetMapping("/students")
-    public List<StudentRecord> getStudents(){
-        return theStudents;
+    public List<Student> getStudents(){
+        return studentService.findAll();
     }
+
 
     @GetMapping("/students/{studentId}")
-    public StudentRecord getStudent(@PathVariable Integer studentId){
+    public Optional<Student> getStudent(@PathVariable Integer studentId){
 
-        if(studentId >= theStudents.size() || studentId < 0){
+        Optional<Student> student = studentService.findById(studentId);
+
+        if(student.isEmpty()){
             throw new RuntimeException("Student id not found: " + studentId);
         }
-        return theStudents.get(studentId);
+        return student;
     }
 
-    /*
-    * Move to StudentExceptionHandler.java
-
-    @ExceptionHandler
-    public ResponseEntity<StudentErrorResponse> handleException(RuntimeException exc){
-        StudentErrorResponse error = new StudentErrorResponse();
-
-        error.setStatus(HttpStatus.NOT_FOUND.value());
-        error.setMessage(exc.getMessage());
-        error.setTimeStamp(System.currentTimeMillis());
-
-        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    @PostMapping("/students")
+    public Student addStudent(@RequestBody Student newStudent){
+        newStudent.setId(0);
+        return studentService.save(newStudent);
     }
 
-
-    @ExceptionHandler
-    public ResponseEntity<StudentErrorResponse> handleException(Exception exc){
-        StudentErrorResponse error = new StudentErrorResponse();
-
-        error.setStatus(HttpStatus.BAD_REQUEST.value());
-        error.setMessage(exc.getMessage());
-        error.setTimeStamp(System.currentTimeMillis());
-
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    @PutMapping("/students")
+    public Student updateStudent(@RequestBody Student student){
+        return studentService.save(student);
     }
 
-     */
+    @DeleteMapping("/students/{studentId}")
+    public String deleteStudent(@PathVariable Integer studentId){
+
+        Optional<Student> student = studentService.findById(studentId);
+
+        if(student.isEmpty()){
+            throw new RuntimeException("Student id not found: " + studentId);
+        }
+
+        studentService.deleteById(studentId);
+        return "Deleted student: " + student;
+    }
 }

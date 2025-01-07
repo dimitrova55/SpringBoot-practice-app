@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class DemoController {
+public class CoachController {
 
     // field injection - not recommended, no need for constructors or setters
     // @Autowired
@@ -18,8 +18,8 @@ public class DemoController {
 
     // constructor injection: required dependency
     @Autowired
-    public DemoController(@Qualifier("baseballCoach") Coach coach,
-                          @Qualifier("baseballCoach") Coach anotherCoach){
+    public CoachController(@Qualifier("baseballCoach") Coach coach,
+                           @Qualifier("baseballCoach") Coach anotherCoach){
         this.coach = coach;
         this.anotherCoach = anotherCoach;
     }

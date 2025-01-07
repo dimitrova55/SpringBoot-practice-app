@@ -5,13 +5,13 @@ import com.example.spring_demo.entity.Student;
 import java.util.List;
 
 public interface StudentDAO {
-    void save (Student student);
+    Student save (Student student);
 
     Student findById(Integer id);
     List<Student> findAll();
     List<Student> findByLastName(String lastName);
 
-    void update(Student theStudent);
-    void delete(Integer id);
+    // void update(Student theStudent);
+    void deleteById(Integer id);
     int deleteAll();
 }
